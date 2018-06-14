@@ -1,3 +1,7 @@
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+messenger:
+    resource: "@MessengerBundle/Controller"
+    type: annotation
+    prefix:   /messenger
