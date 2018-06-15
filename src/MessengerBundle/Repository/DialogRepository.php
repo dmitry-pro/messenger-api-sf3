@@ -118,4 +118,24 @@ class DialogRepository extends \Doctrine\ORM\EntityRepository
         $this->getEntityManager()->remove($dialog);
         $this->getEntityManager()->flush($dialog);
     }
+
+    /**
+     * @param int $dialogId
+     *
+     * @return bool
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function removeDialogById($dialogId)
+    {
+        $dialog = $this->find($dialogId);
+        if ($dialog) {
+            $this->getEntityManager()->remove($dialog);
+            $this->getEntityManager()->flush($dialog);
+
+            return true;
+        }
+
+        return false;
+    }
 }

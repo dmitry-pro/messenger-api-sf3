@@ -38,6 +38,28 @@ class DialogsController extends FOSRestController
     }
 
     /**
+     * @param Request $request
+     *
+     * @FOS\Delete(path="/dialogs")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteDialogsAction(Request $request)
+    {
+        $this->authenticateRequest($request);
+
+        $result = $this->getDoctrine()->getRepository('MessengerBundle:Dialog')->removeAllDialogs();
+
+        // idempotent
+        $view = $this
+            ->view([])
+            ->setEngine('json')
+        ;
+
+        return $this->handleView($view);
+    }
+
+    /**
      * @param int     $dialogId
      * @param Request $request
      *
@@ -55,6 +77,29 @@ class DialogsController extends FOSRestController
 
         $view = $this
             ->view($data)
+            ->setEngine('json')
+        ;
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param int     $dialogId
+     * @param Request $request
+     *
+     * @FOS\Delete(path="/dialogs/{dialogId}")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteDialogAction($dialogId, Request $request)
+    {
+        $this->authenticateRequest($request);
+
+        $result = $this->getDoctrine()->getRepository('MessengerBundle:Dialog')->removeDialogById($dialogId);
+
+        // idempotent
+        $view = $this
+            ->view([])
             ->setEngine('json')
         ;
 
