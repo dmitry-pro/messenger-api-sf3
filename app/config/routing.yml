@@ -6,7 +6,7 @@ user:
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+
 messenger:
-    resource: "@MessengerBundle/Controller"
-    type: annotation
+    resource: "@MessengerBundle/Resources/config/routing.yml"
     prefix:   /messenger
