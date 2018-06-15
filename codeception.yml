@@ -7,8 +7,7 @@ suites:
             enabled:
                 - REST:
                     url: http://localhost:8000/api/messenger/v1
-                    depends: PhpBrowser
-
+                    depends: Symfony
 paths:
     tests: tests
     output: tests/_output
