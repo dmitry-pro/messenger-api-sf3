@@ -2,7 +2,9 @@
 
 namespace UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use MessengerBundle\Entity\Dialog;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -36,6 +38,26 @@ class User implements UserInterface
      */
     private $authToken;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="MessengerBundle\Entity\Dialog", mappedBy="users")
+     **/
+    private $dialogs;
+
+    /**
+     * User constructor.
+     *
+     * @param string $username
+     * @param string $token
+     */
+    public function __construct($username, $token)
+    {
+        $this->username = $username;
+        $this->authToken = $token;
+
+        $this->dialogs = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -81,6 +103,40 @@ class User implements UserInterface
     public function setAuthToken($authToken)
     {
         $this->authToken = $authToken;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getDialogs()
+    {
+        return $this->dialogs;
+    }
+
+    /**
+     * @param Dialog $dialog
+     *
+     * @return $this
+     */
+    public function addDialog(Dialog $dialog)
+    {
+        $dialog->addUser($this);
+        $this->dialogs[] = $dialog;
+
+        return $this;
+    }
+
+    /**
+     * @param Dialog $dialog
+     *
+     * @return $this
+     */
+    public function removeDialog(Dialog $dialog)
+    {
+        $this->dialogs->removeElement($dialog);
+        $dialog->removeUser($this);
 
         return $this;
     }
