@@ -25,9 +25,10 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
     {
 
         /** @var DialogRepository $dialogRepo */
-        $dialogRepo = $this->getEntityManager()->getRepository('MessageBundle:Dialog');
+        $dialogRepo = $this->getEntityManager()->getRepository('MessengerBundle:Dialog');
 
         $dialog = $dialogRepo->createOrGetDialogWithUsers([$author, $recipient]);
+
 
         $dialog->addMessage($message);
         $this->getEntityManager()->persist($message);

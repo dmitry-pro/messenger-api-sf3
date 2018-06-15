@@ -1,6 +1,7 @@
 <?php
 
 namespace MessengerBundle\Repository;
+
 use MessengerBundle\Entity\Dialog;
 use MessengerBundle\Entity\Message;
 use UserBundle\Entity\User;
@@ -19,27 +20,37 @@ class DialogRepository extends \Doctrine\ORM\EntityRepository
      * @return array|Dialog
      *
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \LogicException
      */
     public function createOrGetDialogWithUsers($users)
     {
-        $qb = $this
-            ->createQueryBuilder('d')
-            ->join('d.users', 'u');
+        // if this is dialog with the same user
+        if (2 === count($users) && $users[0] == $users[1]) {
+            throw new \LogicException('Dialog with the same user cannot be created in this schema version due to composite PK in many-to-many table.');
+        }
 
-        foreach ($users as $user) {
+        $qb = $this->createQueryBuilder('d');
+        foreach ($users as $key => $user) {
             $qb = $qb
-                ->andWhere(':user in u')
-                ->setParameter('user', $user)
+                ->andWhere(':user_id_' . $key . ' MEMBER OF d.users ')
+                ->setParameter(':user_id_' . $key, $user->getId())
             ;
         }
 
         $result = $qb->getQuery()->getResult();
+
         if ($result) {
             $result = $result[0];
         } else {
-            $result = new Dialog($users);
-            $this->getEntityManager()->persist($result);
-            $this->getEntityManager()->flush($result);
+            $result = new Dialog();
+            if ($users && count($users)) {
+                foreach ($users as $user) {
+                    $result->addUser($user);
+                }
+                $this->getEntityManager()->persist($result);
+                $this->getEntityManager()->flush($result);
+            }
+
         }
 
         return $result;
@@ -49,6 +60,8 @@ class DialogRepository extends \Doctrine\ORM\EntityRepository
      * @param Dialog  $dialog
      * @param Message $message
      *
+     * @return Message
+     *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function writeToDialog(Dialog $dialog, Message $message)
@@ -56,6 +69,8 @@ class DialogRepository extends \Doctrine\ORM\EntityRepository
         $dialog->addMessage($message);
         $this->getEntityManager()->persist($message);
         $this->getEntityManager()->flush($message);
+
+        return $message;
     }
 
     /**
