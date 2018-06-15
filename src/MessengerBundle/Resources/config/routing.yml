@@ -1,3 +1,11 @@
 users:
     type:     rest
     resource: 'MessengerBundle\Controller\UsersController'
+
+messages:
+    type:     rest
+    resource: 'MessengerBundle\Controller\MessagesController'
+
+dialogs:
+    type:     rest
+    resource: 'MessengerBundle\Controller\DialogsController'

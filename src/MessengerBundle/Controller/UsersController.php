@@ -35,16 +35,16 @@ class UsersController extends FOSRestController
     }
 
     /**
-     * @param int     $id
+     * @param int     $userId
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getUserAction($id, Request $request)
+    public function getUserAction($userId, Request $request)
     {
         $this->authenticateRequest($request);
 
-        $data = $this->getDoctrine()->getRepository('UserBundle:User')->find($id);
+        $data = $this->getDoctrine()->getRepository('UserBundle:User')->find($userId);
 
         if (!$data) {
             throw $this->createNotFoundException();
@@ -52,6 +52,32 @@ class UsersController extends FOSRestController
 
         $view = $this
             ->view($data)
+            ->setEngine('json')
+        ;
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param int     $userId
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getUserDialogsAction($userId, Request $request)
+    {
+        $this->authenticateRequest($request);
+
+        $user = $this->getDoctrine()->getRepository('UserBundle:User')->find($userId);
+
+        if (!$user) {
+            throw $this->createNotFoundException();
+        }
+
+        $dialogs = $this->getDoctrine()->getRepository('UserBundle:User')->getUserDialogs($user);
+
+        $view = $this
+            ->view($dialogs)
             ->setEngine('json')
         ;
 
