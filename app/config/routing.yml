@@ -9,9 +9,9 @@ app:
 
 messenger:
     resource: "@MessengerBundle/Resources/config/routing.yml"
-    prefix:   /messenger
+    prefix:   /api/messenger/v1
 
 app.swagger_ui:
-    path: /api/doc/messenger
+    path: /api/doc/messenger/v1
     methods: GET
     defaults: { _controller: nelmio_api_doc.controller.swagger_ui }

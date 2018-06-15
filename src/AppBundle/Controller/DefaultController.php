@@ -15,6 +15,6 @@ class DefaultController extends Controller
     public function indexAction()
     {
         // replace this example code with whatever you need
-        return $this->redirect('/messenger');
+        return $this->redirect('/api/doc/messenger/v1');
     }
 }

@@ -85,14 +85,14 @@ fos_rest:
             xml: true
     format_listener:
         rules:
-            - { path: '^/messenger', priorities: ['json'], fallback_format: json, prefer_extension: true }
+            - { path: '^/api/messenger', priorities: ['json'], fallback_format: json, prefer_extension: true }
             - { path: ^/, priorities: ['html', '*/*'], fallback_format: html, prefer_extension: true }
 #    disable_csrf_role: ROLE_API
 
 nelmio_api_doc:
     areas:
         path_patterns: # an array of regexps
-            - ^/messenger(?!/doc$)
+            - ^/api/messenger(?!/doc$)
     documentation:
         schemes: [http]
         info:
