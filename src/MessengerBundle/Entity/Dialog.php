@@ -5,6 +5,7 @@ namespace MessengerBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UserBundle\Entity\User;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Dialog
@@ -20,43 +21,44 @@ class Dialog
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Serializer\Groups({"Default"})
      */
     private $id;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\User", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\User", inversedBy="dialogs", cascade={"persist"})
      * @ORM\JoinTable(name="users_dialogs",
      *      joinColumns={@ORM\JoinColumn(name="dialog_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id",
      *      onDelete="CASCADE")}
      *      )
+     *
+     * @Serializer\Groups({"Default"})
+     * @Serializer\MaxDepth(1)
      */
     private $users;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dialog", mappedBy="dialog", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="dialog", cascade={"persist", "remove"})
+     *
+     * @Serializer\Groups({"Exclude"})
+     * @Serializer\MaxDepth(1)
      */
     private $messages;
 
     /**
      * Dialog constructor.
      *
-     * @param User[]|null $users
      */
-    public function __construct($users = null)
+    public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->users = new ArrayCollection();
-
-        if ($users) {
-            foreach ($users as $user) {
-                $this->addUser($user);
-            }
-        }
     }
 
     /**
@@ -78,8 +80,8 @@ class Dialog
      */
     public function addUser(User $user)
     {
-        $user->addDialog($this);
         $this->users[] = $user;
+        $user->addDialog($this);
 
         return $this;
     }
@@ -127,6 +129,7 @@ class Dialog
     public function addMessage(Message $message)
     {
         $this->messages[] = $message;
+        $message->setDialog($this);
 
         return $this;
     }

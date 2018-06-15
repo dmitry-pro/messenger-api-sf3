@@ -4,6 +4,7 @@ namespace MessengerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use UserBundle\Entity\User;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Message
@@ -20,6 +21,8 @@ class Message
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Serializer\Groups({"Default"})
      */
     private $id;
 
@@ -28,6 +31,9 @@ class Message
      *
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="messages")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @Serializer\MaxDepth(1)
+     * @Serializer\Groups({"Default"})
      */
     private $author;
 
@@ -36,6 +42,9 @@ class Message
      *
      * @ORM\ManyToOne(targetEntity="Dialog", inversedBy="messages")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @Serializer\Groups({"Default"})
+     * @Serializer\MaxDepth(1)
      */
     private $dialog;
 
@@ -43,6 +52,8 @@ class Message
      * @var string
      *
      * @ORM\Column(name="text", type="text")
+     *
+     * @Serializer\Groups({"Default"})
      */
     private $text;
 
@@ -50,6 +61,8 @@ class Message
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Serializer\Groups({"Default"})
      */
     private $createdAt;
 

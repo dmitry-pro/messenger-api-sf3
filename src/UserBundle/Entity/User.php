@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use MessengerBundle\Entity\Dialog;
 use Symfony\Component\Security\Core\User\UserInterface;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * User
@@ -21,6 +22,8 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Serializer\Groups({"Default"})
      */
     private $id;
 
@@ -28,6 +31,8 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=100, unique=true)
+     *
+     * @Serializer\Groups({"Default"})
      */
     private $username;
 
@@ -35,15 +40,28 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="auth_token", type="string", length=255, unique=true)
+     *
+     * @Serializer\Groups({"Exclude"})
      */
     private $authToken;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="MessengerBundle\Entity\Dialog", mappedBy="users")
+     * @ORM\ManyToMany(targetEntity="MessengerBundle\Entity\Dialog", mappedBy="users", cascade={"persist"})
+     *
+     * @Serializer\Groups({"Exclude"})
      **/
     private $dialogs;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="MessengerBundle\Entity\Message", mappedBy="author")
+     *
+     * @Serializer\Groups({"Exclude"})
+     */
+    private $messages;
 
     /**
      * User constructor.
@@ -57,6 +75,7 @@ class User implements UserInterface
         $this->authToken = $token;
 
         $this->dialogs = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     /**
@@ -122,8 +141,8 @@ class User implements UserInterface
      */
     public function addDialog(Dialog $dialog)
     {
-        $dialog->addUser($this);
         $this->dialogs[] = $dialog;
+//        $dialog->addUser($this);
 
         return $this;
     }
