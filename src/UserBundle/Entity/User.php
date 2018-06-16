@@ -5,7 +5,6 @@ namespace UserBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use MessengerBundle\Entity\Dialog;
-use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -14,7 +13,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="UserBundle\Repository\UserRepository")
  */
-class User implements UserInterface
+class User
 {
     /**
      * @var int
@@ -169,26 +168,4 @@ class User implements UserInterface
     {
         return $this->authToken;
     }
-
-    public function getRoles()
-    {
-        // TODO: Implement getRoles() method.
-    }
-
-    public function getPassword()
-    {
-        // TODO: Implement getPassword() method.
-    }
-
-    public function getSalt()
-    {
-        // TODO: Implement getSalt() method.
-    }
-
-    public function eraseCredentials()
-    {
-        // TODO: Implement eraseCredentials() method.
-    }
-
-
 }

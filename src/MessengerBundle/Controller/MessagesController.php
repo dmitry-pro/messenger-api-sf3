@@ -96,6 +96,7 @@ class MessagesController extends FOSRestController
 
             $view = $this
                 ->view($newMessage)
+                ->setStatusCode(201)
                 ->setEngine('json');
 
             return $this->handleView($view);

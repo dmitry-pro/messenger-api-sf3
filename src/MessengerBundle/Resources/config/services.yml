@@ -2,3 +2,6 @@ services:
 #    messenger.example:
 #        class: MessengerBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+  messenger.fixrures.user:
+      class: MessengerBundle\DataFixtures\UserFixtures
+      tags: [doctrine.fixture.orm]
