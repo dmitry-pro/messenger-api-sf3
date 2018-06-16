@@ -1,9 +1,7 @@
 <?php
 
-
 class UsersApiCest
 {
-    // todo: setUp, tearDown
     public function tryListUsers(ApiTester $I)
     {
 
@@ -17,7 +15,8 @@ class UsersApiCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
-        // todo: how many.
+        $resp = json_decode($I->grabResponse());
+        $I->assertCount(4, $resp);
     }
 
     public function tryGetUser(ApiTester $I)
@@ -52,16 +51,19 @@ class UsersApiCest
             'text' => 'Hello, Zebra!',
             'username' => 'zebra',
         ]);
-        $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIs(201);
         $I->seeResponseIsJson();
         // case sensitive
-        $I->canSeeResponseContains('Hello, Zebra!');
-        $I->canSeeResponseContains('zebra');
-        // sender
-        $I->canSeeResponseContains('panda');
+        $I->canSeeResponseContainsJSON(['text' => 'Hello, Zebra!']);
+        $I->canSeeResponseContainsJSON(['username' => 'zebra']);
 
-        // todo: getUserDialogs
+        $I->canSeeResponseJsonMatchesJsonPath('$.author');
+        $resp = json_decode($I->grabResponse(), true);
+        $I->assertArraySubset(        [
+            'id' => 1,
+            'username' => 'panda',
+        ], $resp['author']);
+
         // todo: 201
-        // todo: explicit json fields check
     }
 }
