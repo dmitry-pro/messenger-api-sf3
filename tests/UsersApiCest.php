@@ -19,6 +19,25 @@ class UsersApiCest
         $I->assertCount(4, $resp);
     }
 
+    public function tryTestMe(ApiTester $I)
+    {
+        $I->sendGET('/users/me');
+        $I->seeResponseCodeIs(401);
+        $I->seeResponseIsJson();
+
+        $I->haveHttpHeader('Authorization', 'Bearer 12345');
+
+        $I->sendGET('/users/me');
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseIsJson();
+
+        $resp = json_decode($I->grabResponse(), true);
+        $I->assertArraySubset([
+            'id' => 1,
+            'username' => 'panda',
+        ], $resp);
+    }
+
     public function tryGetUser(ApiTester $I)
     {
 
