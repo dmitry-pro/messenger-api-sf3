@@ -1,4 +1,6 @@
 # suite config
+params:
+    - app/config/parameters.yml
 suites:
     api:
         actor: ApiTester
@@ -8,6 +10,17 @@ suites:
                 - REST:
                     url: http://localhost:8000/api/messenger/v1
                     depends: Symfony
+                - Db:
+                    dsn: 'mysql:host=%database_host%;dbname=%database_name%_test'
+                    port: '%database_port%'
+                    user: '%database_user%'
+                    password: '%database_password%'
+                    charset: UTF8
+                    dump: 'tests/_data/rest-messenger_test_2018-06-15.sql'
+                    populate: true # run populator before all tests
+                    cleanup: true # run populator before each test
+                    populator: 'mysql -u %database_user% -h %database_host% %database_name%_test -p%database_password% < $dump'
+                - Asserts: ~
 paths:
     tests: tests
     output: tests/_output
