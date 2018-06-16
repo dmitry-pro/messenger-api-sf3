@@ -2,13 +2,39 @@
 
 class DialogsApiCest
 {
-    public function tryListEmptyDialogs(ApiTester $I)
+    public function tryTestSecurity(ApiTester $I)
     {
-
         $I->sendGET('/dialogs');
         $I->seeResponseCodeIs(401);
         $I->seeResponseIsJson();
 
+        $I->sendPOST('/messages/create', [
+            'text' => 'Hello, Zebra!',
+            'username' => 'zebra',
+        ]);
+        $I->seeResponseCodeIs(401);
+        $I->seeResponseIsJson();
+
+        // test security
+        $I->sendGET('/dialogs/1/messages');
+        $I->seeResponseCodeIs(401);
+
+        $I->sendPOST('/dialogs/1/messages/create');
+        $I->seeResponseCodeIs(401);
+
+        // test security
+        $I->sendGET('/dialogs/2');
+        $I->seeResponseCodeIs(401);
+
+        $I->sendDELETE('/dialogs/2');
+        $I->seeResponseCodeIs(401);
+
+        $I->sendDELETE('/dialogs');
+        $I->seeResponseCodeIs(401);
+    }
+
+    public function tryListEmptyDialogs(ApiTester $I)
+    {
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
         $I->sendGET('/dialogs');
@@ -19,14 +45,6 @@ class DialogsApiCest
 
     public function tryCreateDialogAndCreateDialogMessage(ApiTester $I)
     {
-        $I->sendPOST('/messages/create', [
-            'text' => 'Hello, Zebra!',
-            'username' => 'zebra',
-        ]);
-
-        $I->seeResponseCodeIs(401);
-        $I->seeResponseIsJson();
-
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
         $I->sendPOST('/messages/create', [
@@ -89,13 +107,6 @@ class DialogsApiCest
 
     public function tryCreateAndGetDialogMessages(ApiTester $I)
     {
-        // test security
-        $I->sendGET('/dialogs/1/messages');
-        $I->seeResponseCodeIs(401);
-
-        $I->sendPOST('/dialogs/1/messages/create');
-        $I->seeResponseCodeIs(401);
-
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
         // create message via "messages" endpoint
@@ -130,16 +141,6 @@ class DialogsApiCest
 
     public function tryGetAndDeleteDialogs(ApiTester $I)
     {
-        // test security
-        $I->sendGET('/dialogs/2');
-        $I->seeResponseCodeIs(401);
-
-        $I->sendDELETE('/dialogs/2');
-        $I->seeResponseCodeIs(401);
-
-        $I->sendDELETE('/dialogs');
-        $I->seeResponseCodeIs(401);
-
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
         // create 3 dialogs w/ 2 messages each

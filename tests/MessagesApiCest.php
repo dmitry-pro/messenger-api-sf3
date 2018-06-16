@@ -2,13 +2,30 @@
 
 class MessagesApiCest
 {
-    public function tryListEmptyMessages(ApiTester $I)
+    public function tryTestSecurity(ApiTester $I)
     {
-
         $I->sendGET('/messages');
         $I->seeResponseCodeIs(401);
         $I->seeResponseIsJson();
 
+        $I->sendPOST('/messages/create', [
+            'text' => 'Hello, Zebra!',
+            'username' => 'zebra',
+        ]);
+        $I->seeResponseCodeIs(401);
+        $I->seeResponseIsJson();
+
+        $I->sendPOST('/messages/create', [
+            'text' => 'Hello, Me!',
+            'username' => 'panda',
+        ]);
+
+        $I->seeResponseCodeIs(401);
+        $I->seeResponseIsJson();
+    }
+
+    public function tryListEmptyMessages(ApiTester $I)
+    {
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
         $I->sendGET('/messages');
@@ -19,14 +36,6 @@ class MessagesApiCest
 
     public function tryCreateMessage(ApiTester $I)
     {
-        $I->sendPOST('/messages/create', [
-            'text' => 'Hello, Zebra!',
-            'username' => 'zebra',
-        ]);
-
-        $I->seeResponseCodeIs(401);
-        $I->seeResponseIsJson();
-
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
         $I->sendPOST('/messages/create', [
@@ -55,17 +64,9 @@ class MessagesApiCest
 
     public function tryCreateInvalidDialog(ApiTester $I)
     {
-        // send message to the same user
-        $I->sendPOST('/messages/create', [
-            'text' => 'Hello, Me!',
-            'username' => 'panda',
-        ]);
-
-        $I->seeResponseCodeIs(401);
-        $I->seeResponseIsJson();
-
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
+        // send message to the same user
         $I->sendPOST('/messages/create', [
             'text' => 'Hello, Me!',
             'username' => 'panda',
