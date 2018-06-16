@@ -2,13 +2,27 @@
 
 class UsersApiCest
 {
-    public function tryListUsers(ApiTester $I)
+    public function tryTestSecurity(ApiTester $I)
     {
-
         $I->sendGET('/users');
         $I->seeResponseCodeIs(401);
         $I->seeResponseIsJson();
 
+        $I->sendGET('/users/me');
+        $I->seeResponseCodeIs(401);
+        $I->seeResponseIsJson();
+
+        $I->sendGET('/users/4');
+        $I->seeResponseCodeIs(401);
+        $I->seeResponseIsJson();
+
+        $I->sendGET('/users/1/dialogs');
+        $I->seeResponseCodeIs(401);
+        $I->seeResponseIsJson();
+    }
+
+    public function tryListUsers(ApiTester $I)
+    {
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
         $I->sendGET('/users');
@@ -19,13 +33,23 @@ class UsersApiCest
         $I->assertCount(4, $resp);
     }
 
-    public function tryGetUser(ApiTester $I)
+    public function tryTestMe(ApiTester $I)
     {
+        $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
-        $I->sendGET('/users/4');
-        $I->seeResponseCodeIs(401);
+        $I->sendGET('/users/me');
+        $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
+        $resp = json_decode($I->grabResponse(), true);
+        $I->assertArraySubset([
+            'id' => 1,
+            'username' => 'panda',
+        ], $resp);
+    }
+
+    public function tryGetUser(ApiTester $I)
+    {
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
         $I->sendGET('/users/4');
@@ -36,10 +60,6 @@ class UsersApiCest
 
     public function tryGetUserDialogs(ApiTester $I)
     {
-        $I->sendGET('/users/1/dialogs');
-        $I->seeResponseCodeIs(401);
-        $I->seeResponseIsJson();
-
         $I->haveHttpHeader('Authorization', 'Bearer 12345');
 
         $I->sendGET('/users/1/dialogs');
@@ -63,7 +83,5 @@ class UsersApiCest
             'id' => 1,
             'username' => 'panda',
         ], $resp['author']);
-
-        // todo: 201
     }
 }

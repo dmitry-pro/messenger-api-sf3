@@ -5,6 +5,8 @@ namespace MessengerBundle\Controller;
 use FOS\RestBundle\Controller\FOSRestController;
 use MessengerBundle\Behavior\BearerAuthenticationTrait;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations as FOS;
+use Swagger\Annotations as SWG;
 use UserBundle\Entity\User;
 
 /**
@@ -26,6 +28,32 @@ class UsersController extends FOSRestController
         $this->authenticateRequest($request);
 
         $data = $this->getDoctrine()->getRepository('UserBundle:User')->findAll();
+        $view = $this
+            ->view($data)
+            ->setEngine('json')
+        ;
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @FOS\Get(path="/users/me")
+     *
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getMeAction(Request $request)
+    {
+        $this->authenticateRequest($request);
+
+        $data = $this->getUser();
+
+        if (!$data) {
+            throw $this->createNotFoundException();
+        }
+
         $view = $this
             ->view($data)
             ->setEngine('json')
