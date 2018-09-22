@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  db:
+      image: 'mysql:5.6.26'
+      container_name: 'mysql_pod'
+      environment:
+        - MYSQL_USER=root
+        - MYSQL_ROOT_PASSWORD=root
+      volumes:
+        - /var/lib/mysql
+  api:
+      build: '.'
+      image: 'demo-messenger-api'
+      container_name: 'messenger_api_pod'
+      environment:
+        - SYMFONY_ENV=dev
+      volumes:
+        - .:/var/www/application
+        - /run/php/php7.1-fpm.sock
+      depends_on:
+        - db
+  nginx:
+      image: 'nginx'
+      container_name: 'nginx_pod'
+      ports:
+        - "8000:80"
+      environment:
+        - SYMFONY_ENV=dev
+      volumes:
+        - .:/var/www/application
+        - ./nginx.conf:/etc/nginx/conf.d/default.conf

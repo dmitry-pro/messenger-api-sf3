@@ -7,7 +7,11 @@ if (PHP_VERSION_ID < 70000) {
     include_once __DIR__.'/../var/bootstrap.php.cache';
 }
 
-$kernel = new AppKernel('prod', false);
+if (!$env = getenv('SYMFONY_ENV')) {
+    $env = 'dev';
+    opcache_reset();
+}
+$kernel = new AppKernel($env, false);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();
 }
