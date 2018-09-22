@@ -1,3 +1,4 @@
+/bin/composer.phar
 /.web-server-pid
 /app/config/parameters.yml
 /build/
