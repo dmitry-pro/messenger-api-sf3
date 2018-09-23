@@ -20,11 +20,11 @@ REST-инфраструктура построена на базе FosRestBundle
 
 При первом запуске:  
 `docker-compose build`  
-`docker-compose up`  
+`docker-compose up -d`  
 `docker exec -it messenger_api_pod sh -c "cd /var/www/application && ./bin/project-install"`  
 
 Если установка уже проводилась:
-`docker-compose up` 
+`docker-compose up -d` 
 
 Всё! Веб-интерфейс доступен по адресу [http://localhost:8000/](http://localhost:8000/)  
 
@@ -32,6 +32,10 @@ REST-инфраструктура построена на базе FosRestBundle
 `docker exec -it messenger_api_pod sh -c "cd /var/www/application && /bin/bash"`  
 Запуск тестов (внутри контейнера):  
 `./vendor/bin/codecept run`  
+Логи:  
+`docker-compose logs -f`  
+Остановка кластера:  
+`docker-compose stop`  
 
 Можно установить приложение на локальную машину [без использования docker-compose](LEGACY-INSTALL.md).
 
