@@ -8,7 +8,7 @@ suites:
         modules:
             enabled:
                 - REST:
-                    url: http://localhost:8000/api/messenger/v1
+                    url: http://localhost:3000/api/messenger/v1
                     depends: Symfony
                 - Db:
                     dsn: 'mysql:host=%database_host%;dbname=%database_name%_test'

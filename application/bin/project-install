@@ -1,15 +1,20 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-cd "$(dirname ${BASH_SOURCE[0]})"
+echo "Warning: run this script only in ./bin directory (it will be fixed in the next release)."
+## cd "$(dirname ${BASH_SOURCE[0]})"
 
 wget https://raw.githubusercontent.com/composer/getcomposer.org/1b137f8bf6db3e79a38a5bc45324414a6b1f9df2/web/installer -O - -q | php -- --quiet
 
 cd ..
 ./bin/composer.phar install --no-interaction
-./bin/console doctrine:database:create
+./bin/console doctrine:database:create --if-not-exists
 ./bin/console doctrine:schema:update --force
 ./bin/console doctrine:fixtures:load -e dev --no-interaction
 
 # tests
-./bin/console doc:database:create -e test
+./bin/console doc:database:create -e test --if-not-exists
 ./bin/console doctrine:sch:update --force -e test
+
+chmod -R 777 ./var/cache
+chmod -R 777 ./var/sessions
+chmod -R 777 ./var/logs
