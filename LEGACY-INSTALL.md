@@ -1,4 +1,5 @@
 ## Установка и запуск приложения на локальной машине (старый способ) 
+`cd application`  
 `composer install`  
 `bin/console doctrine:database:create`  
 `bin/console doctrine:schema:update --force`  
