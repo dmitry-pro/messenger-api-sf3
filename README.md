@@ -20,18 +20,18 @@ REST-инфраструктура построена на базе FosRestBundle
 
 При первом запуске:  
 `docker-compose build`  
-`docker-compose up`  
-`docker exec -it messenger_api_pod sh -c "cd /var/www/application && ./bin/project-install"`  
+`docker-compose up -d`  
+`docker exec -it messenger_api_pod sh -c "cd /var/www/application/bin && ./project-install"`  
 
 Если установка уже проводилась:
-`docker-compose up` 
+`docker-compose up -d` 
 
 Всё! Веб-интерфейс доступен по адресу [http://localhost:8000/](http://localhost:8000/)  
 
 Доступ по SSH:  
-`docker exec -it messenger_api_pod sh -c "cd /var/www/application && /bin/bash"`  
-Запуск тестов (внутри контейнера):  
-`./vendor/bin/codecept run`  
+`docker exec -it messenger_api_pod sh -c "cd /var/www/application && sh"`  
+Запуск тестов:  
+`docker exec -it messenger_api_pod sh -c "cd /var/www/application && ./vendor/bin/codecept run"`  
 
 ## Авторизация для API
 
