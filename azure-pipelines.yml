@@ -19,6 +19,13 @@ steps:
 #      php -version
 #      displayName: 'Set PHP'
 #      enabled: false
+  - task: Docker@1
+    displayName: 'Docker login'
+    inputs:
+      containerregistrytype: 'Container Registry'
+      dockerRegistryEndpoint: 'teddyclub shop registry'
+      command: login
+
   - script: |
         docker build -f Dockerfile -t $(dockerId)/$(imageName) .
         docker login -u $(dockerId) -p $pswd
