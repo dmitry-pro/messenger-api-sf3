@@ -4,8 +4,6 @@ queue:
   name: Hosted Ubuntu 1604
 variables:
 #  BuildConfiguration: 'Release'
-  DockerId: 'teddyclubshop'
-  DockerImageName: 'teddyclubshop/[PROJECT-NAME]'
 steps:
 #  - bash: |
       # Write your commands here
@@ -26,17 +24,17 @@ steps:
 #      command: login
 
   - script: |
-        docker build -f Dockerfile -t $(dockerId)/$(imageName) .
-        docker login -u $(dockerId) -p $pswd
+        docker build -f Dockerfile -t $(DockerId)/$(DockerImageName):$(Build.BuildId) .
+        docker login -u $(DockerId) -p $pswd
         docker-compose up -d
         # provision
         docker-compose exec api sh -c "cd /var/www/application/bin && ./project-install"
         # tests
         docker-compose exec api sh -c "cd /var/www/application && ./vendor/bin/codecept run"
         # push
-        docker push $(dockerId)/$(imageName)
+        docker push $(DockerId)/$(DockerImageName)
     env:
-        pswd: $(dockerPassword)
+        pswd: $(DockerPassword)
 
 #  - task: Docker@1
 #    displayName: 'Push an image'
