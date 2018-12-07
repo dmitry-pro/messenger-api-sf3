@@ -8,17 +8,17 @@ queue:
 #Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 #Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 steps:
-  - bash: |
+#  - bash: |
       # Write your commands here
       # Use the environment variables input below to pass secret variables to this script
-      sudo update-alternatives --set php /usr/bin/php$(phpVersion)
-      sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
-      sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
-      sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
-      sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
-      php -version
-      displayName: 'Set PHP'
-      enabled: false
+#      sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+#      sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+#      sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+#      sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+#      sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+#      php -version
+#      displayName: 'Set PHP'
+#      enabled: false
   - script: |
       docker build -f Dockerfile -t $(dockerId)/$(imageName) .
       docker login -u $(dockerId) -p $pswd
