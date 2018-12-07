@@ -8,7 +8,7 @@ services:
         - MYSQL_ROOT_PASSWORD=root
         - MYSQL_ROOT_HOST=%
       volumes:
-        - ./data/mysql:/var/lib/mysql
+        - mysql-data:/var/lib/mysql
       expose:
         - "3306/tcp"
   api:
@@ -40,3 +40,5 @@ services:
         - ./data/nginx/logs:/var/log/nginx
       depends_on:
         - api
+volumes:
+  mysql-data:
