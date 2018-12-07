@@ -18,11 +18,16 @@ steps:
     command: login
 	
 - script: |
-	npm install
-	npm test
     docker build -f Dockerfile -t $(dockerId)/$(imageName) .
     docker login -u $(dockerId) -p $pswd
+	docker-compose up -d
+	# provision
+	docker-compose exec api sh -c "cd /var/www/application/bin && ./project-install"
+	# tests
+	docker-compose exec api sh -c "cd /var/www/application && ./vendor/bin/codecept run"
+	# push
 	docker push $(dockerId)/$(imageName)
+	
   env:
 	  pswd: $(dockerPassword)
 
