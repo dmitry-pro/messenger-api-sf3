@@ -1,0 +1,61 @@
+resources:
+- repo: self
+queue:
+  name: Hosted Ubuntu 1604
+#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+steps:
+- task: Docker@1
+  displayName: 'Docker login'
+  inputs:
+    containerregistrytype: 'Container Registry'
+
+    dockerRegistryEndpoint: 'teddyclub shop registry'
+
+    command: login
+
+
+- task: Docker@1
+  displayName: 'Build an image'
+  inputs:
+    containerregistrytype: 'Container Registry'
+
+    dockerRegistryEndpoint: 'teddyclub shop registry'
+
+
+- bash: |
+   # Write your commands here
+   
+   # Use the environment variables input below to pass secret variables to this script
+   
+       sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+       sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+       sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+       sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+       sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+       php -version
+  displayName: 'Set PHP'
+  enabled: false
+
+- bash: 'php ./application/bin/project-install'
+  displayName: 'Project install (only for testing purpuses)'
+  enabled: false
+
+- bash: 'php ./vendor/bin/codecept run'
+  displayName: 'Run tests'
+  enabled: false
+
+- task: Docker@1
+  displayName: 'Push an image'
+  inputs:
+    containerregistrytype: 'Container Registry'
+
+    dockerRegistryEndpoint: 'teddyclub shop registry'
+
+    command: 'Push an image'
+
+
+
