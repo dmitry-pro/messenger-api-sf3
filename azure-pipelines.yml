@@ -2,11 +2,10 @@ resources:
 - repo: self
 queue:
   name: Hosted Ubuntu 1604
-#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references an undefined variable named ‘phpVersion’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+variables:
+#  BuildConfiguration: 'Release'
+  DockerId: 'teddyclubshop'
+  DockerImageName: 'teddyclubshop/[PROJECT-NAME]'
 steps:
 #  - bash: |
       # Write your commands here
@@ -38,3 +37,13 @@ steps:
         docker push $(dockerId)/$(imageName)
     env:
         pswd: $(dockerPassword)
+
+  - task: Docker@1
+    displayName: 'Push an image'
+    enabled: true
+    inputs:
+      containerregistrytype: 'Container Registry'
+      dockerRegistryEndpoint: 'teddyclub shop registry'
+#      command: 'Push an image'
+      command: 'push'
+          imageName: 'contoso.azurecr.io/$repositoryname:$(Build.BuildId)'
