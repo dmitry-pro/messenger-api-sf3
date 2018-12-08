@@ -31,9 +31,9 @@ steps:
         pswd: $(DockerPassword)
   - script: |
         # provision
-        docker-compose exec api sh -c "cd /var/www/application/bin && ./project-install"
+        docker-compose exec -T api sh -c "cd /var/www/application/bin && ./project-install"
         # tests
-        docker-compose exec api sh -c "cd /var/www/application && ./vendor/bin/codecept run"
+        docker-compose exec -T api sh -c "cd /var/www/application && ./vendor/bin/codecept run"
   - script: |
         # push
         docker tag $(DockerId)/$(DockerImageName):$(Build.BuildId) $(DockerId)/$(DockerImageName):latest
