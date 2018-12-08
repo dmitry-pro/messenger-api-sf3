@@ -33,6 +33,7 @@ steps:
         docker-compose exec api sh -c "cd /var/www/application && ./vendor/bin/codecept run"
         # push
         docker push $(DockerId)/$(DockerImageName)
+        docker tag $(DockerId)/$(DockerImageName):$(Build.BuildId) $(DockerId)/$(DockerImageName):latest
     env:
         pswd: $(DockerPassword)
 
