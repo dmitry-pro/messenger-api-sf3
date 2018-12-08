@@ -1,0 +1,6 @@
+**/node_modules
+application/vendor
+application/var/sessions/!.gitkeep
+application/var/logs/!.gitkeep
+application/var/cache/!.gitkeep
+

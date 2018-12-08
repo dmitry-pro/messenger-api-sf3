@@ -27,13 +27,17 @@ steps:
         docker build -f Dockerfile -t $(DockerId)/$(DockerImageName):$(Build.BuildId) .
         docker login -u $(DockerId) -p $pswd
         docker-compose up -d
+    env:
+        pswd: $(DockerPassword)
+  - script: |
         # provision
         docker-compose exec api sh -c "cd /var/www/application/bin && ./project-install"
         # tests
         docker-compose exec api sh -c "cd /var/www/application && ./vendor/bin/codecept run"
+  - script: |
         # push
-        docker push $(DockerId)/$(DockerImageName)
         docker tag $(DockerId)/$(DockerImageName):$(Build.BuildId) $(DockerId)/$(DockerImageName):latest
+        docker push $(DockerId)/$(DockerImageName)
     env:
         pswd: $(DockerPassword)
 
