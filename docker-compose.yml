@@ -11,34 +11,22 @@ services:
         - mysql-data:/var/lib/mysql
       expose:
         - "3306/tcp"
-  api:
-      build: '.'
-      image: 'demo-messenger-api'
+      networks:
+        - default
+  api_ppm:
+      image: phppm/nginx
       container_name: 'messenger_api_pod'
-      environment:
-        - SYMFONY_ENV=dev
+      command: --debug=1 --bootstrap=symfony --app-env=dev --static-directory=web/
       volumes:
-        - ./application:/var/www/application
+        - ./application/:/var/www
       depends_on:
         - db
-      expose:
-        - "9000/tcp"
-  nginx:
-      image: 'nginx'
-      container_name: 'nginx_pod'
       ports:
-        - "3000:80"
-      environment:
-        - SYMFONY_ENV=dev
-      volumes:
-        # static
-        - ./application/web:/var/www/application/web
-        - ./application/src:/var/www/application/src
-        - ./application/vendor:/var/www/application/vendor
-        # end static
-        - ./nginx.conf:/etc/nginx/conf.d/default.conf
-        - ./data/nginx/logs:/var/log/nginx
-      depends_on:
-        - api
+        - "8080:80"
+      networks:
+        - default
+
 volumes:
-  mysql-data:
+  mysql-data: {}
+networks:
+  default: {}
