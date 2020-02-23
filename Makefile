@@ -55,7 +55,7 @@ bash: docker-compose.yml ## Go to the application container via bash (if any)
 	docker-compose exec $(ARGS) /bin/bash
 
 .PHONY: install
-install: composer.phar ## Install deps
+install: ## Install deps
 	docker-compose exec app composer install --no-interaction
 
 .PHONY: init-db
