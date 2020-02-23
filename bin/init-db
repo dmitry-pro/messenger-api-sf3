@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+./bin/console doctrine:database:create --if-not-exists
+./bin/console doctrine:schema:update --force
+./bin/console doctrine:fixtures:load -e dev --no-interaction
+
+# tests
+./bin/console doc:database:create -e test --if-not-exists
+./bin/console doctrine:sch:update --force -e test

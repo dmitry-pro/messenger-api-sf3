@@ -1,6 +1,13 @@
-**/node_modules
-application/vendor
+.dockerignore
+.editorconfig
+.git
+.gitattributes
+.gitignore
+.idea
+terraform.tfstate
+Dockerfile
+README.md
+tests/
 application/var/sessions/!.gitkeep
 application/var/logs/!.gitkeep
 application/var/cache/!.gitkeep
-

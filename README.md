@@ -19,19 +19,20 @@ REST-инфраструктура построена на базе FosRestBundle
 ## Установка приложения через **_docker-compose_** (рекомендуется)
 
 При первом запуске:  
-`docker-compose build`  
-`docker-compose up -d`  
-`docker exec -it messenger_api_pod sh -c "cd /var/www/application/bin && ./project-install"`  
+`make build`  
+`make up`  
+`make install`  
+`make init-db`  
 
 Если установка уже проводилась:
-`docker-compose up -d` 
+`make up` 
 
-Всё! Веб-интерфейс доступен по адресу [http://localhost:8000/](http://localhost:8000/)  
+Всё! Веб-интерфейс SWAGGER доступен по адресу [http://localhost:8080/api/doc/messenger/v1](http://localhost:8000/)  
 
 Доступ по SSH:  
-`docker exec -it messenger_api_pod sh -c "cd /var/www/application && sh"`  
+`make shell app`  
 Запуск тестов:  
-`docker exec -it messenger_api_pod sh -c "cd /var/www/application && ./vendor/bin/codecept run"`  
+`make test`  
 
 ## Авторизация для API
 
